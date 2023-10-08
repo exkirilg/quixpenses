@@ -6,6 +6,7 @@ builder.Services.AddControllers().AddNewtonsoftJson();
 
 builder.ConfigureTelegramBotServices();
 builder.ConfigureHostedServices();
+builder.ConfigureDataAccessServices();
 
 var app = builder.Build();
 

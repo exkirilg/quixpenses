@@ -1,6 +1,8 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Quixpenses.App.ConfigurationOptions;
+using Quixpenses.App.DatabaseAccess;
 using Quixpenses.App.HostedServices;
 using Quixpenses.App.Services;
 
@@ -27,5 +29,13 @@ public static class WebApplicationExtensions
     public static void ConfigureHostedServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddHostedService<WebhooksConfigurationService>();
+    }
+
+    public static void ConfigureDataAccessServices(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddDbContext<EfContext>(options =>
+            options
+                .UseNpgsql(builder.Configuration.GetConnectionString("Db"))
+                .UseSnakeCaseNamingConvention());
     }
 }
