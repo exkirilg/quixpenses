@@ -2,7 +2,7 @@
 
 namespace Quixpenses.App.DatabaseAccess.DatabaseModels;
 
-public record DbTransaction
+public record DbTransaction : IDbModel
 {
     public Guid Id { get; set; }
 

@@ -2,7 +2,7 @@
 
 namespace Quixpenses.App.DatabaseAccess.DatabaseModels;
 
-public record DbUser
+public record DbUser : IDbModel
 {
     public long Id { get; set; }
 

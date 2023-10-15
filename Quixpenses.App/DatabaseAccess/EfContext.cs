@@ -11,6 +11,8 @@ public class EfContext : DbContext
     {
     }
 
+    public DbSet<DbInvite> Invites { get; set; } = default!;
+
     public DbSet<DbUser> Users { get; set; } = default!;
 
     public DbSet<DbCurrency> Currencies { get; set; } = default!;

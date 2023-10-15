@@ -9,4 +9,5 @@ public class TelegramBotOptions
     public string HostAddress { get; init; } = default!;
     public string Route { get; init; } = default!;
     public string SecretToken { get; init; } = default!;
+    public string Link { get; init; } = default!;
 }

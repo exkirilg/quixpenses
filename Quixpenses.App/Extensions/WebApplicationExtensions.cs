@@ -3,8 +3,10 @@ using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Quixpenses.App.ConfigurationOptions;
 using Quixpenses.App.DatabaseAccess;
+using Quixpenses.App.DatabaseAccess.UnitOfWork;
 using Quixpenses.App.HostedServices;
 using Quixpenses.App.Services;
+using Quixpenses.App.Services.Invites;
 
 namespace Quixpenses.App.Extensions;
 
@@ -23,6 +25,8 @@ public static class WebApplicationExtensions
                 return new TelegramBotClient(options, httpClient);
             });
 
+        builder.Services.AddScoped<IInvitesServices, InvitesServices>();
+
         builder.Services.AddScoped<ITelegramBotMessageHandler, TelegramBotMessageHandler>();
     }
 
@@ -37,5 +41,7 @@ public static class WebApplicationExtensions
             options
                 .UseNpgsql(builder.Configuration.GetConnectionString("Db"))
                 .UseSnakeCaseNamingConvention());
+
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }
