@@ -5,6 +5,7 @@ using Quixpenses.App.ConfigurationOptions;
 using Quixpenses.App.DatabaseAccess;
 using Quixpenses.App.DatabaseAccess.Repositories.Invites;
 using Quixpenses.App.DatabaseAccess.Repositories.Users;
+using Quixpenses.App.DatabaseAccess.UnitOfWork;
 using Quixpenses.App.HostedServices;
 using Quixpenses.App.Services.Invites;
 using Quixpenses.App.Services.MessagesHandling;
@@ -14,8 +15,11 @@ namespace Quixpenses.App.Extensions;
 
 public static class WebApplicationExtensions
 {
-    public static void ConfigureTelegramBotServices(this WebApplicationBuilder builder)
+    public static void ConfigureServices(this WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<IInvitesServices, InvitesServices>();
+        builder.Services.AddScoped<IUsersServices, UsersServices>();
+
         builder.Services.Configure<TelegramBotOptions>(
             builder.Configuration.GetSection(TelegramBotOptions.BotConfigurationSection));
 
@@ -27,9 +31,6 @@ public static class WebApplicationExtensions
                 return new TelegramBotClient(options, httpClient);
             });
 
-        builder.Services.AddScoped<IInvitesServices, InvitesServices>();
-        builder.Services.AddScoped<IUsersServices, UsersServices>();
-
         builder.Services.AddScoped<ITelegramBotMessageHandler, TelegramBotMessageHandler>();
     }
 
@@ -38,7 +39,7 @@ public static class WebApplicationExtensions
         builder.Services.AddHostedService<WebhooksConfigurationService>();
     }
 
-    public static void ConfigureDataAccessServices(this WebApplicationBuilder builder)
+    public static void ConfigureDataAccess(this WebApplicationBuilder builder)
     {
         builder.Services.AddDbContext<EfContext>(options =>
             options
@@ -47,5 +48,7 @@ public static class WebApplicationExtensions
 
         builder.Services.AddScoped<IInvitesRepository, InvitesRepository>();
         builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     }
 }

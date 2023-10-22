@@ -3,34 +3,21 @@ using Quixpenses.App.DatabaseAccess.DatabaseModels;
 
 namespace Quixpenses.App.DatabaseAccess.Repositories.Users;
 
-public class UsersRepository : IUsersRepository
+public class UsersRepository : GenericRepository<DbUser>, IUsersRepository
 {
-    private readonly EfContext _context;
-
-    public UsersRepository(EfContext context)
+    public UsersRepository(EfContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<DbUser?> TryGetByIdAsync(long id)
     {
-        var result = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+        var result = await Context.Users.FirstOrDefaultAsync(x => x.Id == id);
         return result;
     }
 
     public async Task<DbUser?> TryGetByIdReadonlyAsync(long id)
     {
-        var result = await _context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        var result = await Context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
         return result;
-    }
-
-    public async Task AddAsync(DbUser entity)
-    {
-        await _context.Users.AddAsync(entity);
-    }
-
-    public async Task SaveChangesAsync()
-    {
-        await _context.SaveChangesAsync();
     }
 }

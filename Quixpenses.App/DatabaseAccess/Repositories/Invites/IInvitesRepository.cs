@@ -2,11 +2,7 @@
 
 namespace Quixpenses.App.DatabaseAccess.Repositories.Invites;
 
-public interface IInvitesRepository
+public interface IInvitesRepository : IGenericRepository<DbInvite>
 {
     Task<DbInvite?> TryGetByIdAsync(Guid id);
-
-    Task AddAsync(DbInvite entity);
-
-    Task SaveChangesAsync();
 }

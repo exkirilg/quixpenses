@@ -2,13 +2,9 @@
 
 namespace Quixpenses.App.DatabaseAccess.Repositories.Users;
 
-public interface IUsersRepository
+public interface IUsersRepository : IGenericRepository<DbUser>
 {
     Task<DbUser?> TryGetByIdAsync(long id);
 
     Task<DbUser?> TryGetByIdReadonlyAsync(long id);
-
-    Task AddAsync(DbUser entity);
-
-    Task SaveChangesAsync();
 }
