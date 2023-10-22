@@ -4,5 +4,5 @@ public interface IInvitesServices
 {
     Task<string> CreateInviteAsync();
 
-    Task<bool> InviteIsActiveAsync(string invite);
+    Task<bool> TryUseInviteAsync(string invite);
 }

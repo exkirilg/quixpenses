@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Telegram.Bot.Types;
-using Quixpenses.App.Services;
+using Quixpenses.App.Services.MessagesHandling;
 
 namespace Quixpenses.App.Controllers;
 
@@ -20,7 +20,7 @@ public class TelegramNotificationsController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult PostUpdate(
+    public async Task<IActionResult> PostUpdateAsync(
         [FromBody] Update update,
         CancellationToken cancellationToken)
     {
@@ -31,7 +31,7 @@ public class TelegramNotificationsController : ControllerBase
 
         try
         {
-            _telegramBotMessageHandler.HandleUpdateAsync(update);
+            await _telegramBotMessageHandler.HandleUpdateAsync(update);
         }
         catch (Exception ex)
         {

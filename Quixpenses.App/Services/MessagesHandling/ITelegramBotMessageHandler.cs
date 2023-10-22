@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot.Types;
 
-namespace Quixpenses.App.Services;
+namespace Quixpenses.App.Services.MessagesHandling;
 
 public interface ITelegramBotMessageHandler
 {

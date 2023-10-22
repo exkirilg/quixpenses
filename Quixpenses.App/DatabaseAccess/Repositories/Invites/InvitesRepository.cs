@@ -3,15 +3,28 @@ using Quixpenses.App.DatabaseAccess.DatabaseModels;
 
 namespace Quixpenses.App.DatabaseAccess.Repositories.Invites;
 
-public class InvitesRepository : AbstractRepository<DbInvite>, IInvitesRepository
+public class InvitesRepository : IInvitesRepository
 {
-    public InvitesRepository(DbSet<DbInvite> dbSet) : base(dbSet)
+    private readonly EfContext _context;
+
+    public InvitesRepository(EfContext context)
     {
+        _context = context;
     }
 
     public async Task<DbInvite?> TryGetByIdAsync(Guid id)
     {
-        var result = await DbSet.FirstOrDefaultAsync(x => x.Id == id);
+        var result = await _context.Invites.FirstOrDefaultAsync(x => x.Id == id);
         return result;
+    }
+
+    public async Task AddAsync(DbInvite entity)
+    {
+        await _context.Invites.AddAsync(entity);
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await _context.SaveChangesAsync();
     }
 }

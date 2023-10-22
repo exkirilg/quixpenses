@@ -2,20 +2,24 @@
 using Telegram.Bot.Types;
 using Quixpenses.App.Exceptions;
 using Quixpenses.App.Models;
+using Quixpenses.App.Services.Users;
 
-namespace Quixpenses.App.Services;
+namespace Quixpenses.App.Services.MessagesHandling;
 
 public class TelegramBotMessageHandler : ITelegramBotMessageHandler
 {
     private readonly ILogger<TelegramBotMessageHandler> _logger;
     private readonly ITelegramBotClient _telegramBotClient;
+    private readonly IUsersServices _usersServices;
 
     public TelegramBotMessageHandler(
         ILogger<TelegramBotMessageHandler> logger,
-        ITelegramBotClient telegramBotClient)
+        ITelegramBotClient telegramBotClient,
+        IUsersServices usersServices)
     {
         _logger = logger;
         _telegramBotClient = telegramBotClient;
+        _usersServices = usersServices;
     }
 
     public async Task HandleUpdateAsync(Update update)
@@ -30,12 +34,35 @@ public class TelegramBotMessageHandler : ITelegramBotMessageHandler
             throw new UnknownUpdateType();
         }
 
-        await ReplyToMessageAsync(incomingMessage);
+        if (incomingMessage.Text.StartsWith("/start"))
+        {
+            await HandleStartAsync(incomingMessage);
+        }
     }
 
-    private async Task ReplyToMessageAsync(IncomingMessage incomingMessage)
+    private async Task HandleStartAsync(IncomingMessage message)
     {
-        var text = incomingMessage.Text ?? string.Empty;
+        var isAuthorized = await _usersServices.IsAuthorizedAsync(message.ChatId);
+
+        if (isAuthorized)
+        {
+            return;
+        }
+
+        isAuthorized = await _usersServices.TryAuthorizeUserAsync(message);
+
+        if (isAuthorized)
+        {
+            await ReplyToMessageAsync(message, "Welcome to QuiXpenses!");
+        }
+        else
+        {
+            await ReplyToMessageAsync(message, "Sorry, there is problem with your invitation, please contact administration");
+        }
+    }
+
+    private async Task ReplyToMessageAsync(IncomingMessage incomingMessage, string text)
+    {
         await SendTextMessageAsync(incomingMessage.ChatId, text, incomingMessage.MessageId);
     }
 

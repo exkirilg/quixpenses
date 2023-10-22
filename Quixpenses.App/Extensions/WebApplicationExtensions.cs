@@ -3,10 +3,12 @@ using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Quixpenses.App.ConfigurationOptions;
 using Quixpenses.App.DatabaseAccess;
-using Quixpenses.App.DatabaseAccess.UnitOfWork;
+using Quixpenses.App.DatabaseAccess.Repositories.Invites;
+using Quixpenses.App.DatabaseAccess.Repositories.Users;
 using Quixpenses.App.HostedServices;
-using Quixpenses.App.Services;
 using Quixpenses.App.Services.Invites;
+using Quixpenses.App.Services.MessagesHandling;
+using Quixpenses.App.Services.Users;
 
 namespace Quixpenses.App.Extensions;
 
@@ -26,6 +28,7 @@ public static class WebApplicationExtensions
             });
 
         builder.Services.AddScoped<IInvitesServices, InvitesServices>();
+        builder.Services.AddScoped<IUsersServices, UsersServices>();
 
         builder.Services.AddScoped<ITelegramBotMessageHandler, TelegramBotMessageHandler>();
     }
@@ -42,6 +45,7 @@ public static class WebApplicationExtensions
                 .UseNpgsql(builder.Configuration.GetConnectionString("Db"))
                 .UseSnakeCaseNamingConvention());
 
-        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        builder.Services.AddScoped<IInvitesRepository, InvitesRepository>();
+        builder.Services.AddScoped<IUsersRepository, UsersRepository>();
     }
 }

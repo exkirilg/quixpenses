@@ -1,21 +1,21 @@
 ﻿using Microsoft.Extensions.Options;
 using Quixpenses.App.ConfigurationOptions;
 using Quixpenses.App.DatabaseAccess.DatabaseModels;
-using Quixpenses.App.DatabaseAccess.UnitOfWork;
+using Quixpenses.App.DatabaseAccess.Repositories.Invites;
 
 namespace Quixpenses.App.Services.Invites;
 
 public class InvitesServices : IInvitesServices
 {
    private readonly IOptions<TelegramBotOptions> _telegramBotOptions;
-   private readonly IUnitOfWork _unitOfWork;
+   private readonly IInvitesRepository _invitesRepository;
 
    public InvitesServices(
       IOptions<TelegramBotOptions> telegramBotOptions,
-      IUnitOfWork unitOfWork)
+      IInvitesRepository invitesRepository)
    {
       _telegramBotOptions = telegramBotOptions;
-      _unitOfWork = unitOfWork;
+      _invitesRepository = invitesRepository;
    }
 
    public async Task<string> CreateInviteAsync()
@@ -26,30 +26,30 @@ public class InvitesServices : IInvitesServices
          ExpiresAt = DateTime.UtcNow.AddDays(1),
       };
 
-      await _unitOfWork.InvitesRepository.AddAsync(dbInvite);
-      await _unitOfWork.SaveChangesAsync();
+      await _invitesRepository.AddAsync(dbInvite);
+      await _invitesRepository.SaveChangesAsync();
 
       var result = $"{_telegramBotOptions.Value.Link}/?start={dbInvite.Id}";
 
       return result;
    }
 
-   public async Task<bool> InviteIsActiveAsync(string invite)
+   public async Task<bool> TryUseInviteAsync(string invite)
    {
-      if (!Guid.TryParse(invite.Replace("start ", ""), out var inviteId))
+      if (!Guid.TryParse(invite.Replace("/start ", ""), out var inviteId))
       {
          return false;
       }
 
-      var dbInvite = await _unitOfWork.InvitesRepository.TryGetByIdAsync(inviteId);
+      var dbInvite = await _invitesRepository.TryGetByIdAsync(inviteId);
 
-      if (dbInvite is null || dbInvite.Available >= dbInvite.Used || DateTime.UtcNow >= dbInvite.ExpiresAt)
+      if (dbInvite is null || dbInvite.Available <= dbInvite.Used || DateTime.UtcNow >= dbInvite.ExpiresAt)
       {
          return false;
       }
 
       dbInvite.Used++;
-      await _unitOfWork.SaveChangesAsync();
+      await _invitesRepository.SaveChangesAsync();
 
       return true;
    }
