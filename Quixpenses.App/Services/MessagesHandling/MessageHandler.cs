@@ -2,18 +2,19 @@
 using Telegram.Bot.Types;
 using Quixpenses.App.Exceptions;
 using Quixpenses.App.Models;
+using Quixpenses.App.Resources;
 using Quixpenses.App.Services.Users;
 
 namespace Quixpenses.App.Services.MessagesHandling;
 
-public class TelegramBotMessageHandler : ITelegramBotMessageHandler
+public class MessageHandler : IMessageHandler
 {
-    private readonly ILogger<TelegramBotMessageHandler> _logger;
+    private readonly ILogger<MessageHandler> _logger;
     private readonly ITelegramBotClient _telegramBotClient;
     private readonly IUsersServices _usersServices;
 
-    public TelegramBotMessageHandler(
-        ILogger<TelegramBotMessageHandler> logger,
+    public MessageHandler(
+        ILogger<MessageHandler> logger,
         ITelegramBotClient telegramBotClient,
         IUsersServices usersServices)
     {
@@ -53,11 +54,11 @@ public class TelegramBotMessageHandler : ITelegramBotMessageHandler
 
         if (isAuthorized)
         {
-            await ReplyToMessageAsync(message, "Welcome to QuiXpenses!");
+            await ReplyToMessageAsync(message, Localization.Welcome);
         }
         else
         {
-            await ReplyToMessageAsync(message, "Sorry, there is problem with your invitation, please contact administration");
+            await ReplyToMessageAsync(message, Localization.BadInvite);
         }
     }
 

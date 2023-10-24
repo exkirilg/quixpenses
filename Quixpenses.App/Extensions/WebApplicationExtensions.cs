@@ -31,7 +31,7 @@ public static class WebApplicationExtensions
                 return new TelegramBotClient(options, httpClient);
             });
 
-        builder.Services.AddScoped<ITelegramBotMessageHandler, TelegramBotMessageHandler>();
+        builder.Services.AddScoped<IMessageHandler, MessageHandler>();
     }
 
     public static void ConfigureHostedServices(this WebApplicationBuilder builder)

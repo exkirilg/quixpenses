@@ -9,14 +9,14 @@ namespace Quixpenses.App.Controllers;
 public class TelegramNotificationsController : ControllerBase
 {
     private readonly ILogger<TelegramNotificationsController> _logger;
-    private readonly ITelegramBotMessageHandler _telegramBotMessageHandler;
+    private readonly IMessageHandler _messageHandler;
 
     public TelegramNotificationsController(
         ILogger<TelegramNotificationsController> logger,
-        ITelegramBotMessageHandler telegramBotMessageHandler)
+        IMessageHandler messageHandler)
     {
         _logger = logger;
-        _telegramBotMessageHandler = telegramBotMessageHandler;
+        _messageHandler = messageHandler;
     }
 
     [HttpPost]
@@ -31,7 +31,7 @@ public class TelegramNotificationsController : ControllerBase
 
         try
         {
-            await _telegramBotMessageHandler.HandleUpdateAsync(update);
+            await _messageHandler.HandleUpdateAsync(update);
         }
         catch (Exception ex)
         {

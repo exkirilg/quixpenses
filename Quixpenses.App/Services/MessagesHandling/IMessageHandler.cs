@@ -2,7 +2,7 @@
 
 namespace Quixpenses.App.Services.MessagesHandling;
 
-public interface ITelegramBotMessageHandler
+public interface IMessageHandler
 {
     Task HandleUpdateAsync(Update update);
 }
