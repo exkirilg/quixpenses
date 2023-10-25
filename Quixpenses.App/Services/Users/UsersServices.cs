@@ -1,5 +1,4 @@
-﻿using Quixpenses.App.DatabaseAccess.DatabaseModels;
-using Quixpenses.App.DatabaseAccess.UnitOfWork;
+﻿using Quixpenses.App.DatabaseAccess.UnitOfWork;
 using Quixpenses.App.Models;
 using Quixpenses.App.Services.Invites;
 
@@ -18,10 +17,10 @@ public class UsersServices : IUsersServices
         _invitesServices = invitesServices;
     }
 
-    public async Task<bool> IsAuthorizedAsync(long id)
+    public async Task<User?> TryGetUserReadonlyAsync(long id)
     {
-        var dbUser = await _unitOfWork.UsersRepository.TryGetByIdReadonlyAsync(id);
-        return dbUser?.IsAuthorized ?? false;
+        var result = await _unitOfWork.UsersRepository.TryGetByIdReadonlyAsync(id);
+        return result;
     }
 
     public async Task<bool> TryAuthorizeUserAsync(IncomingMessage message)
@@ -34,7 +33,7 @@ public class UsersServices : IUsersServices
 
         if (newUser)
         {
-            dbUser = new DbUser { Id = message.ChatId };
+            dbUser = new User { Id = message.ChatId };
         }
 
         dbUser!.IsAuthorized = inviteAvailable;

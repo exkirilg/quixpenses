@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Quixpenses.App.DatabaseAccess.DatabaseModels;
+using Quixpenses.App.DatabaseAccess.DatabaseConfiguration;
 using Quixpenses.App.DatabaseAccess.SeedingData;
+using Quixpenses.App.Models;
 
 namespace Quixpenses.App.DatabaseAccess;
 
@@ -11,16 +12,17 @@ public class EfContext : DbContext
     {
     }
 
-    public DbSet<DbInvite> Invites { get; set; } = default!;
+    public DbSet<Invite> Invites { get; set; } = default!;
 
-    public DbSet<DbUser> Users { get; set; } = default!;
+    public DbSet<User> Users { get; set; } = default!;
 
-    public DbSet<DbCurrency> Currencies { get; set; } = default!;
+    public DbSet<Currency> Currencies { get; set; } = default!;
 
-    public DbSet<DbTransaction> Transactions { get; set; } = default!;
+    public DbSet<Transaction> Transactions { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.SeedCurrencies();
+        modelBuilder.ConfigureTransactions();
     }
 }

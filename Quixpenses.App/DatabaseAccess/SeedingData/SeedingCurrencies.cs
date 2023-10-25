@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Quixpenses.App.DatabaseAccess.DatabaseModels;
+using Quixpenses.App.Models;
 
 namespace Quixpenses.App.DatabaseAccess.SeedingData;
 
@@ -7,8 +7,8 @@ public static class SeedingCurrencies
 {
     public static void SeedCurrencies(this ModelBuilder builder)
     {
-        builder.Entity<DbCurrency>().HasData(
-            new DbCurrency { Id = "USD", FractionDigits = 2 },
-            new DbCurrency { Id = "EUR", FractionDigits = 2 });
+        builder.Entity<Currency>().HasData(
+            new Currency { Id = "USD", FractionDigits = 2 },
+            new Currency { Id = "EUR", FractionDigits = 2 });
     }
 }

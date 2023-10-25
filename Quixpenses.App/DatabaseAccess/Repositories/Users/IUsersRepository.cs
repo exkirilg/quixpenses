@@ -1,10 +1,10 @@
-﻿using Quixpenses.App.DatabaseAccess.DatabaseModels;
+﻿using Quixpenses.App.Models;
 
 namespace Quixpenses.App.DatabaseAccess.Repositories.Users;
 
-public interface IUsersRepository : IGenericRepository<DbUser>
+public interface IUsersRepository : IGenericRepository<User>
 {
-    Task<DbUser?> TryGetByIdAsync(long id);
+    Task<User?> TryGetByIdAsync(long id);
 
-    Task<DbUser?> TryGetByIdReadonlyAsync(long id);
+    Task<User?> TryGetByIdReadonlyAsync(long id);
 }

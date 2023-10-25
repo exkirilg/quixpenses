@@ -3,12 +3,19 @@ using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Quixpenses.App.ConfigurationOptions;
 using Quixpenses.App.DatabaseAccess;
+using Quixpenses.App.DatabaseAccess.Repositories.Currencies;
 using Quixpenses.App.DatabaseAccess.Repositories.Invites;
+using Quixpenses.App.DatabaseAccess.Repositories.Transactions;
 using Quixpenses.App.DatabaseAccess.Repositories.Users;
 using Quixpenses.App.DatabaseAccess.UnitOfWork;
+using Quixpenses.App.Handlers;
+using Quixpenses.App.Handlers.Auth;
+using Quixpenses.App.Handlers.HandlerSelection;
+using Quixpenses.App.Handlers.NewTransaction;
 using Quixpenses.App.HostedServices;
 using Quixpenses.App.Services.Invites;
 using Quixpenses.App.Services.MessagesHandling;
+using Quixpenses.App.Services.Transactions;
 using Quixpenses.App.Services.Users;
 
 namespace Quixpenses.App.Extensions;
@@ -19,6 +26,8 @@ public static class WebApplicationExtensions
     {
         builder.Services.AddScoped<IInvitesServices, InvitesServices>();
         builder.Services.AddScoped<IUsersServices, UsersServices>();
+        builder.Services.AddScoped<IMessageHandlingService, MessageHandlingService>();
+        builder.Services.AddScoped<ITransactionsService, TransactionsService>();
 
         builder.Services.Configure<TelegramBotOptions>(
             builder.Configuration.GetSection(TelegramBotOptions.BotConfigurationSection));
@@ -31,7 +40,9 @@ public static class WebApplicationExtensions
                 return new TelegramBotClient(options, httpClient);
             });
 
-        builder.Services.AddScoped<IMessageHandler, MessageHandler>();
+        builder.Services.AddScoped<IHandlerSelector, HandlerSelector>();
+        builder.Services.AddScoped<IAuthHandler, AuthHandler>();
+        builder.Services.AddScoped<INewTransactionHandler, NewTransactionHandler>();
     }
 
     public static void ConfigureHostedServices(this WebApplicationBuilder builder)
@@ -48,6 +59,8 @@ public static class WebApplicationExtensions
 
         builder.Services.AddScoped<IInvitesRepository, InvitesRepository>();
         builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+        builder.Services.AddScoped<ICurrenciesRepository, CurrenciesRepository>();
+        builder.Services.AddScoped<ITransactionsRepository, TransactionsRepository>();
 
         builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     }

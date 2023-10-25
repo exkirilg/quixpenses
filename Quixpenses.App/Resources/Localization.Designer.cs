@@ -69,6 +69,15 @@ namespace Quixpenses.App.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry, there is problem with your authorization, please contact administration.
+        /// </summary>
+        internal static string Unauthorized {
+            get {
+                return ResourceManager.GetString("Unauthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Welcome to QuiXpenses!.
         /// </summary>
         internal static string Welcome {

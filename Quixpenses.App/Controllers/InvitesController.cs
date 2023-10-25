@@ -16,7 +16,7 @@ public class InvitesController : ControllerBase
         _invitesServices = invitesServices;
     }
 
-    [HttpGet("new")]
+    [HttpPost]
     public async Task<IActionResult> CreateInviteAsync()
     {
         var result = await _invitesServices.CreateInviteAsync();

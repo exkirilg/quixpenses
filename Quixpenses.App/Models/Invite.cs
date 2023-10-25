@@ -1,6 +1,8 @@
-﻿namespace Quixpenses.App.DatabaseAccess.DatabaseModels;
+﻿using Quixpenses.App.Models.Interfaces;
 
-public record DbInvite : IDbModel
+namespace Quixpenses.App.Models;
+
+public record Invite : IDbModel
 {
     public Guid Id { get; set; }
 

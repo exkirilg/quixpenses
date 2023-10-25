@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Quixpenses.App.ConfigurationOptions;
-using Quixpenses.App.DatabaseAccess.DatabaseModels;
 using Quixpenses.App.DatabaseAccess.UnitOfWork;
+using Quixpenses.App.Models;
 
 namespace Quixpenses.App.Services.Invites;
 
@@ -20,7 +20,7 @@ public class InvitesServices : IInvitesServices
 
    public async Task<string> CreateInviteAsync()
    {
-      var dbInvite = new DbInvite
+      var dbInvite = new Invite
       {
          Available = 1,
          ExpiresAt = DateTime.UtcNow.AddDays(1),

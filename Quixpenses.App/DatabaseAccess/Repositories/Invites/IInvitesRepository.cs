@@ -1,8 +1,8 @@
-﻿using Quixpenses.App.DatabaseAccess.DatabaseModels;
+﻿using Quixpenses.App.Models;
 
 namespace Quixpenses.App.DatabaseAccess.Repositories.Invites;
 
-public interface IInvitesRepository : IGenericRepository<DbInvite>
+public interface IInvitesRepository : IGenericRepository<Invite>
 {
-    Task<DbInvite?> TryGetByIdAsync(Guid id);
+    Task<Invite?> TryGetByIdAsync(Guid id);
 }
