@@ -30,11 +30,11 @@ public static class Guard
         }
     }
 
-    public static void AgainstCurrencyNotFound(Currency? currency, string currencyCode)
+    public static void AgainstCurrencyNotFound(Currency? currency)
     {
         if (currency is null)
         {
-            throw new UnknownCurrencyCode(currencyCode);
+            throw new UnknownCurrencyCode();
         }
     }
 }

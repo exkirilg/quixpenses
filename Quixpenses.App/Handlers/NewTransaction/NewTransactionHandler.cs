@@ -4,19 +4,13 @@ using Quixpenses.App.Services.Transactions;
 
 namespace Quixpenses.App.Handlers.NewTransaction;
 
-public class NewTransactionHandler : INewTransactionHandler
-{
-    private readonly ITransactionsService _transactionsService;
-
-    public NewTransactionHandler(
+public class NewTransactionHandler(
         ITransactionsService transactionsService)
-    {
-        _transactionsService = transactionsService;
-    }
-
+    : INewTransactionHandler
+{
     public async Task HandleAsync(User? user, IncomingMessage message)
     {
         Guard.AgainstUnauthorizedUser(user);
-        await _transactionsService.NewTransactionAsync(user!, message);
+        await transactionsService.NewTransactionAsync(user!, message);
     }
 }

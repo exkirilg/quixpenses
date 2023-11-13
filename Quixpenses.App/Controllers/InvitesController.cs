@@ -7,19 +7,14 @@ namespace Quixpenses.App.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class InvitesController : ControllerBase
+public class InvitesController(
+        IInvitesServices invitesServices)
+    : ControllerBase
 {
-    private readonly IInvitesServices _invitesServices;
-
-    public InvitesController(IInvitesServices invitesServices)
-    {
-        _invitesServices = invitesServices;
-    }
-
     [HttpPost]
     public async Task<IActionResult> CreateInviteAsync()
     {
-        var result = await _invitesServices.CreateInviteAsync();
+        var result = await invitesServices.CreateInviteAsync();
         return Ok(result);
     }
 }

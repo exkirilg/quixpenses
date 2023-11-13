@@ -1,33 +1,31 @@
 ﻿using Quixpenses.App.Handlers.Auth;
 using Quixpenses.App.Handlers.NewTransaction;
+using Quixpenses.App.Handlers.UserSettings;
 using Quixpenses.App.Models;
 
 namespace Quixpenses.App.Handlers.HandlerSelection;
 
-public class HandlerSelector : IHandlerSelector
-{
-    private readonly IAuthHandler _authHandler;
-    private readonly INewTransactionHandler _newTransactionHandler;
-
-    public HandlerSelector(
+public class HandlerSelector(
         IAuthHandler authHandler,
-        INewTransactionHandler newTransactionHandler)
-    {
-        _authHandler = authHandler;
-        _newTransactionHandler = newTransactionHandler;
-    }
-
+        INewTransactionHandler newTransactionHandler,
+        ISettingsModificationHandler settingsModificationHandler)
+    : IHandlerSelector
+{
     public IHandler? SelectHandler(IncomingMessage message)
     {
         IHandler? result = null;
 
         if (message.IsStartCommand())
         {
-            result = _authHandler;
+            result = authHandler;
+        }
+        else if (message.IsSetCommand())
+        {
+            result = settingsModificationHandler;
         }
         else if (message.IsNewTransactionCommand())
         {
-            result = _newTransactionHandler;
+            result = newTransactionHandler;
         }
 
         return result;

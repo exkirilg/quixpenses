@@ -9,28 +9,16 @@ using Quixpenses.App.Services.Users;
 
 namespace Quixpenses.App.Services.MessagesHandling;
 
-public class MessageHandlingService : IMessageHandlingService
-{
-    private readonly ILogger<MessageHandlingService> _logger;
-    private readonly ITelegramBotClient _telegramBotClient;
-    private readonly IUsersServices _usersServices;
-    private readonly IHandlerSelector _handlerSelector;
-
-    public MessageHandlingService(
+public class MessageHandlingService(
         ILogger<MessageHandlingService> logger,
         ITelegramBotClient telegramBotClient,
         IUsersServices usersServices,
         IHandlerSelector handlerSelector)
-    {
-        _logger = logger;
-        _telegramBotClient = telegramBotClient;
-        _usersServices = usersServices;
-        _handlerSelector = handlerSelector;
-    }
-
+    : IMessageHandlingService
+{
     public async Task HandleUpdateAsync(Update update)
     {
-        _logger.LogInformation(
+        logger.LogInformation(
             "Handling update for chat {chatId} {message}",
             update.Message?.Chat.Id,
             update.Message?.Text);
@@ -38,9 +26,9 @@ public class MessageHandlingService : IMessageHandlingService
         var message = IncomingMessage.TryParse(update);
         Guard.AgainstUnknownUpdateType(message);
 
-        var user = await _usersServices.TryGetUserReadonlyAsync(message!.ChatId);
+        var user = await usersServices.TryGetUserReadonlyAsync(message!.ChatId);
 
-        var handler = _handlerSelector.SelectHandler(message);
+        var handler = handlerSelector.SelectHandler(message);
         Guard.AgainstNotImplementedHandler(handler);
 
         try
@@ -49,7 +37,7 @@ public class MessageHandlingService : IMessageHandlingService
         }
         catch (UnauthorizedException)
         {
-            await _telegramBotClient.SendTextMessageAsync(message.ChatId, Localization.Unauthorized);
+            await telegramBotClient.SendTextMessageAsync(message.ChatId, Localization.Unauthorized);
             throw;
         }
     }

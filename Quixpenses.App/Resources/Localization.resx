@@ -18,13 +18,16 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="Welcome" xml:space="preserve">
-        <value>Welcome to QuiXpenses!</value>
-    </data>
     <data name="BadInvite" xml:space="preserve">
-        <value>Sorry, there is problem with your invitation, please contact administration</value>
+        <value>There is problem with your invitation, please contact administration</value>
     </data>
     <data name="Unauthorized" xml:space="preserve">
-        <value>Sorry, there is problem with your authorization, please contact administration</value>
+        <value>There is problem with your authorization, please contact administration</value>
+    </data>
+    <data name="UnknownCurrency" xml:space="preserve">
+        <value>Unable to determine currency {0}</value>
+    </data>
+    <data name="UnknownSetting" xml:space="preserve">
+        <value>Unable to determine setting {0}</value>
     </data>
 </root>

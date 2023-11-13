@@ -4,22 +4,24 @@ using Quixpenses.App.Models;
 
 namespace Quixpenses.App.Services.Transactions;
 
-public class TransactionsService : ITransactionsService
-{
-    private readonly IUnitOfWork _unitOfWork;
-
-    public TransactionsService(
+public class TransactionsService(
         IUnitOfWork unitOfWork)
-    {
-        _unitOfWork = unitOfWork;
-    }
-
+    : ITransactionsService
+{
     public async Task NewTransactionAsync(User user, IncomingMessage message)
     {
         var (sum, currencyCode) = message.ParseTransaction();
 
-        var currency = await _unitOfWork.CurrenciesRepository.TryGetByIdReadonlyAsync(currencyCode);
-        Guard.AgainstCurrencyNotFound(currency, currencyCode);
+        Currency? currency;
+        if (string.IsNullOrWhiteSpace(currencyCode))
+        {
+            currency = user.UserSettings?.Currency;
+        }
+        else
+        {
+            currency = await unitOfWork.CurrenciesRepository.TryGetByIdReadonlyAsync(currencyCode);
+        }
+        Guard.AgainstCurrencyNotFound(currency);
 
         var transaction = new Transaction
         {
@@ -28,7 +30,7 @@ public class TransactionsService : ITransactionsService
             Sum = (int)(Math.Round(sum, currency.FractionDigits) * Math.Pow(10, currency.FractionDigits)),
         };
 
-        await _unitOfWork.TransactionsRepository.AddAsync(transaction);
-        await _unitOfWork.SaveChangesAsync();
+        await unitOfWork.TransactionsRepository.AddAsync(transaction);
+        await unitOfWork.SaveChangesAsync();
     }
 }

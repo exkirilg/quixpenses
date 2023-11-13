@@ -3,12 +3,10 @@ using Quixpenses.App.Models;
 
 namespace Quixpenses.App.DatabaseAccess.Repositories.Users;
 
-public class UsersRepository : GenericRepository<User>, IUsersRepository
+public class UsersRepository(
+        EfContext context)
+    : GenericRepository<User>(context), IUsersRepository
 {
-    public UsersRepository(EfContext context) : base(context)
-    {
-    }
-
     public async Task<User?> TryGetByIdAsync(long id)
     {
         var result = await Context.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -17,7 +15,10 @@ public class UsersRepository : GenericRepository<User>, IUsersRepository
 
     public async Task<User?> TryGetByIdReadonlyAsync(long id)
     {
-        var result = await Context.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
+        var result = await Context.Users
+            .AsNoTracking()
+            .Include(x => x.UserSettings).ThenInclude(x => x!.Currency)
+            .FirstOrDefaultAsync(x => x.Id == id);
         return result;
     }
 }

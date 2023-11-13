@@ -7,4 +7,6 @@ public interface IUsersServices
     Task<User?> TryGetUserReadonlyAsync(long id);
 
     Task<bool> TryAuthorizeUserAsync(IncomingMessage message);
+
+    Task SetUserCurrencyAsync(User user, string currencyCode);
 }

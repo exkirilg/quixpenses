@@ -7,43 +7,35 @@ namespace Quixpenses.App.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class TelegramNotificationsController : ControllerBase
-{
-    private readonly ILogger<TelegramNotificationsController> _logger;
-    private readonly IMessageHandlingService _messageHandlingService;
-
-    public TelegramNotificationsController(
+public class TelegramNotificationsController(
         ILogger<TelegramNotificationsController> logger,
         IMessageHandlingService messageHandlingService)
-    {
-        _logger = logger;
-        _messageHandlingService = messageHandlingService;
-    }
-
+    : ControllerBase
+{
     [HttpPost]
     public async Task<IActionResult> PostUpdateAsync(
         [FromBody] Update update)
     {
-        _logger.LogInformation(
+        logger.LogInformation(
             "Received update from chat {chatId}: {message}",
             update.Message?.Chat.Id,
             update.Message?.Text);
 
         try
         {
-            await _messageHandlingService.HandleUpdateAsync(update);
+            await messageHandlingService.HandleUpdateAsync(update);
         }
-        catch (UnauthorizedException ex)
+        catch (UnauthorizedException)
         {
-            _logger.LogWarning("Unauthorized {chatId}", ex.ChatId);
+            logger.LogWarning("Unauthorized {chatId}", update.Message?.Chat.Id);
         }
         catch (UnknownUpdateTypeException)
         {
-            _logger.LogWarning("Unable to parse update");
+            logger.LogWarning("Unable to parse update");
         }
         catch (Exception ex)
         {
-            _logger.LogError(
+            logger.LogError(
                 "Exception thrown while handling update from chat {chatId} {message} {exception}",
                 update.Message?.Chat.Id,
                 update.Message?.Text,

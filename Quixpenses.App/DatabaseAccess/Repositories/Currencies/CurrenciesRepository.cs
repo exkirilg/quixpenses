@@ -3,12 +3,10 @@ using Quixpenses.App.Models;
 
 namespace Quixpenses.App.DatabaseAccess.Repositories.Currencies;
 
-public class CurrenciesRepository : GenericRepository<Currency>, ICurrenciesRepository
+public class CurrenciesRepository(
+        EfContext context)
+    : GenericRepository<Currency>(context), ICurrenciesRepository
 {
-    public CurrenciesRepository(EfContext context) : base(context)
-    {
-    }
-
     public async Task<Currency?> TryGetByIdReadonlyAsync(string id)
     {
         var result = await Context.Currencies.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);

@@ -2,14 +2,12 @@
 
 namespace Quixpenses.App.DatabaseAccess.Repositories;
 
-public abstract class GenericRepository<T> : IGenericRepository<T> where T : class, IDbModel
+public abstract class GenericRepository<T>(
+        EfContext context)
+    : IGenericRepository<T>
+    where T : class, IDbModel
 {
-    protected readonly EfContext Context;
-
-    protected GenericRepository(EfContext context)
-    {
-        Context = context;
-    }
+    protected readonly EfContext Context = context;
 
     public virtual async Task AddAsync(T entity)
     {

@@ -2,37 +2,31 @@
 using Quixpenses.App.DatabaseAccess.Repositories.Invites;
 using Quixpenses.App.DatabaseAccess.Repositories.Transactions;
 using Quixpenses.App.DatabaseAccess.Repositories.Users;
+using Quixpenses.App.DatabaseAccess.Repositories.UsersSettings;
 
 namespace Quixpenses.App.DatabaseAccess.UnitOfWork;
 
-public class UnitOfWork : IUnitOfWork
-{
-    private readonly EfContext _context;
-
-    public UnitOfWork(
+public class UnitOfWork(
         EfContext context,
         IInvitesRepository invitesRepository,
         IUsersRepository usersRepository,
+        IUsersSettingsRepository usersSettingsRepository,
         ICurrenciesRepository currenciesRepository,
         ITransactionsRepository transactionsRepository)
-    {
-        _context = context;
-        InvitesRepository = invitesRepository;
-        UsersRepository = usersRepository;
-        CurrenciesRepository = currenciesRepository;
-        TransactionsRepository = transactionsRepository;
-    }
+    : IUnitOfWork
+{
+    public IInvitesRepository InvitesRepository { get; } = invitesRepository;
 
-    public IInvitesRepository InvitesRepository { get; }
+    public IUsersRepository UsersRepository { get; } = usersRepository;
 
-    public IUsersRepository UsersRepository { get; }
+    public IUsersSettingsRepository UsersSettingsRepository { get; } = usersSettingsRepository;
 
-    public ICurrenciesRepository CurrenciesRepository { get; }
+    public ICurrenciesRepository CurrenciesRepository { get; } = currenciesRepository;
 
-    public ITransactionsRepository TransactionsRepository { get; }
+    public ITransactionsRepository TransactionsRepository { get; } = transactionsRepository;
 
     public async Task SaveChangesAsync()
     {
-        await this._context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 }

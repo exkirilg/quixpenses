@@ -5,43 +5,35 @@ using Quixpenses.App.ConfigurationOptions;
 
 namespace Quixpenses.App.HostedServices;
 
-public class WebhooksConfigurationService : IHostedService
-{
-    private readonly ILogger<WebhooksConfigurationService> _logger;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly TelegramBotOptions _telegramBotOptions;
-
-    public WebhooksConfigurationService(
+public class WebhooksConfigurationService(
         ILogger<WebhooksConfigurationService> logger,
         IServiceProvider serviceProvider,
         IOptions<TelegramBotOptions> options)
-    {
-        _logger = logger;
-        _serviceProvider = serviceProvider;
-        _telegramBotOptions = options.Value;
-    }
+    : IHostedService
+{
+    private readonly TelegramBotOptions telegramBotOptions = options.Value;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var telegramBotClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-        var webhookAddress = $"{_telegramBotOptions.HostAddress}{_telegramBotOptions.Route}";
-        _logger.LogInformation("Setting webhook: {WebhookAddress}", webhookAddress);
+        var webhookAddress = $"{telegramBotOptions.HostAddress}{telegramBotOptions.Route}";
+        logger.LogInformation("Setting webhook: {WebhookAddress}", webhookAddress);
 
         await telegramBotClient.SetWebhookAsync(
             url: webhookAddress,
             allowedUpdates: Array.Empty<UpdateType>(),
-            secretToken: _telegramBotOptions.SecretToken,
+            secretToken: telegramBotOptions.SecretToken,
             cancellationToken: cancellationToken);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {
-        using var scope = _serviceProvider.CreateScope();
+        using var scope = serviceProvider.CreateScope();
         var telegramBotClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-        _logger.LogInformation("Deleting webhook");
+        logger.LogInformation("Deleting webhook");
         await telegramBotClient.DeleteWebhookAsync(cancellationToken: cancellationToken);
     }
 }

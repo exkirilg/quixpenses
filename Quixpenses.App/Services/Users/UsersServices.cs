@@ -1,33 +1,26 @@
 ﻿using Quixpenses.App.DatabaseAccess.UnitOfWork;
+using Quixpenses.App.Guards;
 using Quixpenses.App.Models;
 using Quixpenses.App.Services.Invites;
 
 namespace Quixpenses.App.Services.Users;
 
-public class UsersServices : IUsersServices
-{
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IInvitesServices _invitesServices;
-
-    public UsersServices(
+public class UsersServices(
         IUnitOfWork unitOfWork,
         IInvitesServices invitesServices)
-    {
-        _unitOfWork = unitOfWork;
-        _invitesServices = invitesServices;
-    }
-
+    : IUsersServices
+{
     public async Task<User?> TryGetUserReadonlyAsync(long id)
     {
-        var result = await _unitOfWork.UsersRepository.TryGetByIdReadonlyAsync(id);
+        var result = await unitOfWork.UsersRepository.TryGetByIdReadonlyAsync(id);
         return result;
     }
 
     public async Task<bool> TryAuthorizeUserAsync(IncomingMessage message)
     {
-        var inviteAvailable = await _invitesServices.TryUseInviteAsync(message.Text);
+        var inviteAvailable = await invitesServices.TryUseInviteAsync(message.Text);
 
-        var dbUser = await _unitOfWork.UsersRepository.TryGetByIdAsync(message.ChatId);
+        var dbUser = await unitOfWork.UsersRepository.TryGetByIdAsync(message.ChatId);
 
         var newUser = dbUser is null;
 
@@ -40,11 +33,24 @@ public class UsersServices : IUsersServices
 
         if (newUser)
         {
-            await _unitOfWork.UsersRepository.AddAsync(dbUser);
+            dbUser.UserSettings = new UserSettings();
+            await unitOfWork.UsersRepository.AddAsync(dbUser);
         }
 
-        await _unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync();
 
         return dbUser.IsAuthorized;
+    }
+
+    public async Task SetUserCurrencyAsync(User user, string currencyCode)
+    {
+        var userSettings = await unitOfWork.UsersSettingsRepository.GetByIdAsync(user.UserSettingsId);
+
+        var currency = await unitOfWork.CurrenciesRepository.TryGetByIdReadonlyAsync(currencyCode);
+        Guard.AgainstCurrencyNotFound(currency);
+
+        userSettings.CurrencyId = currencyCode;
+
+        await unitOfWork.SaveChangesAsync();
     }
 }

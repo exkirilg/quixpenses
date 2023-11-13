@@ -5,19 +5,11 @@ using Quixpenses.App.Models;
 
 namespace Quixpenses.App.Services.Invites;
 
-public class InvitesServices : IInvitesServices
-{
-   private readonly IOptions<TelegramBotOptions> _telegramBotOptions;
-   private readonly IUnitOfWork _unitOfWork;
-
-   public InvitesServices(
+public class InvitesServices(
       IOptions<TelegramBotOptions> telegramBotOptions,
       IUnitOfWork unitOfWork)
-   {
-      _telegramBotOptions = telegramBotOptions;
-      _unitOfWork = unitOfWork;
-   }
-
+   : IInvitesServices
+{
    public async Task<string> CreateInviteAsync()
    {
       var dbInvite = new Invite
@@ -26,10 +18,10 @@ public class InvitesServices : IInvitesServices
          ExpiresAt = DateTime.UtcNow.AddDays(1),
       };
 
-      await _unitOfWork.InvitesRepository.AddAsync(dbInvite);
-      await _unitOfWork.SaveChangesAsync();
+      await unitOfWork.InvitesRepository.AddAsync(dbInvite);
+      await unitOfWork.SaveChangesAsync();
 
-      var result = $"{_telegramBotOptions.Value.Link}/?start={dbInvite.Id}";
+      var result = $"{telegramBotOptions.Value.Link}/?start={dbInvite.Id}";
 
       return result;
    }
@@ -41,7 +33,7 @@ public class InvitesServices : IInvitesServices
          return false;
       }
 
-      var dbInvite = await _unitOfWork.InvitesRepository.TryGetByIdAsync(inviteId);
+      var dbInvite = await unitOfWork.InvitesRepository.TryGetByIdAsync(inviteId);
 
       if (dbInvite is null || dbInvite.Available <= dbInvite.Used || DateTime.UtcNow >= dbInvite.ExpiresAt)
       {
@@ -49,7 +41,7 @@ public class InvitesServices : IInvitesServices
       }
 
       dbInvite.Used++;
-      await _unitOfWork.SaveChangesAsync();
+      await unitOfWork.SaveChangesAsync();
 
       return true;
    }

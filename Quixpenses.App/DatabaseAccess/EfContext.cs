@@ -5,16 +5,15 @@ using Quixpenses.App.Models;
 
 namespace Quixpenses.App.DatabaseAccess;
 
-public class EfContext : DbContext
+public class EfContext(
+        DbContextOptions<EfContext> options)
+    : DbContext(options)
 {
-    public EfContext(DbContextOptions<EfContext> options)
-        : base(options)
-    {
-    }
-
     public DbSet<Invite> Invites { get; set; } = default!;
 
     public DbSet<User> Users { get; set; } = default!;
+
+    public DbSet<UserSettings> UsersSettings { get; set; } = default!;
 
     public DbSet<Currency> Currencies { get; set; } = default!;
 

@@ -60,7 +60,7 @@ namespace Quixpenses.App.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sorry, there is problem with your invitation, please contact administration.
+        ///   Looks up a localized string similar to There is problem with your invitation, please contact administration.
         /// </summary>
         internal static string BadInvite {
             get {
@@ -69,7 +69,7 @@ namespace Quixpenses.App.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sorry, there is problem with your authorization, please contact administration.
+        ///   Looks up a localized string similar to There is problem with your authorization, please contact administration.
         /// </summary>
         internal static string Unauthorized {
             get {
@@ -78,11 +78,20 @@ namespace Quixpenses.App.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Welcome to QuiXpenses!.
+        ///   Looks up a localized string similar to Unable to determine currency {0}.
         /// </summary>
-        internal static string Welcome {
+        internal static string UnknownCurrency {
             get {
-                return ResourceManager.GetString("Welcome", resourceCulture);
+                return ResourceManager.GetString("UnknownCurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to determine setting {0}.
+        /// </summary>
+        internal static string UnknownSetting {
+            get {
+                return ResourceManager.GetString("UnknownSetting", resourceCulture);
             }
         }
     }

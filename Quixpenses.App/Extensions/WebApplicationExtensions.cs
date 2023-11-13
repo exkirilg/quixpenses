@@ -7,11 +7,12 @@ using Quixpenses.App.DatabaseAccess.Repositories.Currencies;
 using Quixpenses.App.DatabaseAccess.Repositories.Invites;
 using Quixpenses.App.DatabaseAccess.Repositories.Transactions;
 using Quixpenses.App.DatabaseAccess.Repositories.Users;
+using Quixpenses.App.DatabaseAccess.Repositories.UsersSettings;
 using Quixpenses.App.DatabaseAccess.UnitOfWork;
-using Quixpenses.App.Handlers;
 using Quixpenses.App.Handlers.Auth;
 using Quixpenses.App.Handlers.HandlerSelection;
 using Quixpenses.App.Handlers.NewTransaction;
+using Quixpenses.App.Handlers.UserSettings;
 using Quixpenses.App.HostedServices;
 using Quixpenses.App.Services.Invites;
 using Quixpenses.App.Services.MessagesHandling;
@@ -43,6 +44,7 @@ public static class WebApplicationExtensions
         builder.Services.AddScoped<IHandlerSelector, HandlerSelector>();
         builder.Services.AddScoped<IAuthHandler, AuthHandler>();
         builder.Services.AddScoped<INewTransactionHandler, NewTransactionHandler>();
+        builder.Services.AddScoped<ISettingsModificationHandler, SettingsModificationHandler>();
     }
 
     public static void ConfigureHostedServices(this WebApplicationBuilder builder)
@@ -59,6 +61,7 @@ public static class WebApplicationExtensions
 
         builder.Services.AddScoped<IInvitesRepository, InvitesRepository>();
         builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+        builder.Services.AddScoped<IUsersSettingsRepository, UsersSettingsRepository>();
         builder.Services.AddScoped<ICurrenciesRepository, CurrenciesRepository>();
         builder.Services.AddScoped<ITransactionsRepository, TransactionsRepository>();
 

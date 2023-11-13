@@ -2,9 +2,6 @@
 
 namespace Quixpenses.App.DatabaseAccess.Repositories.Transactions;
 
-public class TransactionsRepository : GenericRepository<Transaction>, ITransactionsRepository
-{
-    public TransactionsRepository(EfContext context) : base(context)
-    {
-    }
-}
+public class TransactionsRepository(
+        EfContext context)
+    : GenericRepository<Transaction>(context), ITransactionsRepository;
