@@ -1,6 +1,7 @@
 ﻿using Quixpenses.App.Guards;
 using Quixpenses.App.Models;
 using Quixpenses.App.Services.Transactions;
+using Quixpenses.DatabaseAccess.DatabaseModels;
 
 namespace Quixpenses.App.Handlers.NewTransaction;
 

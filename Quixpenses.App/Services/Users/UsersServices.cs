@@ -1,7 +1,8 @@
-﻿using Quixpenses.App.DatabaseAccess.UnitOfWork;
-using Quixpenses.App.Guards;
+﻿using Quixpenses.App.Guards;
 using Quixpenses.App.Models;
 using Quixpenses.App.Services.Invites;
+using Quixpenses.DatabaseAccess.DatabaseModels;
+using Quixpenses.DatabaseAccess.UnitOfWork;
 
 namespace Quixpenses.App.Services.Users;
 

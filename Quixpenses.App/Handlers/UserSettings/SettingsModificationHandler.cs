@@ -3,6 +3,7 @@ using Quixpenses.App.Guards;
 using Quixpenses.App.Models;
 using Quixpenses.App.Resources;
 using Quixpenses.App.Services.Users;
+using Quixpenses.DatabaseAccess.DatabaseModels;
 using Telegram.Bot;
 
 namespace Quixpenses.App.Handlers.UserSettings;

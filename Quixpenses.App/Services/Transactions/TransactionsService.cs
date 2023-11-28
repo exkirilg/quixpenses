@@ -1,6 +1,7 @@
-﻿using Quixpenses.App.DatabaseAccess.UnitOfWork;
-using Quixpenses.App.Guards;
+﻿using Quixpenses.App.Guards;
 using Quixpenses.App.Models;
+using Quixpenses.DatabaseAccess.DatabaseModels;
+using Quixpenses.DatabaseAccess.UnitOfWork;
 
 namespace Quixpenses.App.Services.Transactions;
 

@@ -1,4 +1,5 @@
 ﻿using Quixpenses.App.Models;
+using Quixpenses.DatabaseAccess.DatabaseModels;
 
 namespace Quixpenses.App.Handlers;
 

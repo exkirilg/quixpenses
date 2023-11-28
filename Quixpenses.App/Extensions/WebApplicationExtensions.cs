@@ -2,13 +2,6 @@
 using Microsoft.Extensions.Options;
 using Telegram.Bot;
 using Quixpenses.App.ConfigurationOptions;
-using Quixpenses.App.DatabaseAccess;
-using Quixpenses.App.DatabaseAccess.Repositories.Currencies;
-using Quixpenses.App.DatabaseAccess.Repositories.Invites;
-using Quixpenses.App.DatabaseAccess.Repositories.Transactions;
-using Quixpenses.App.DatabaseAccess.Repositories.Users;
-using Quixpenses.App.DatabaseAccess.Repositories.UsersSettings;
-using Quixpenses.App.DatabaseAccess.UnitOfWork;
 using Quixpenses.App.Handlers.Auth;
 using Quixpenses.App.Handlers.HandlerSelection;
 using Quixpenses.App.Handlers.NewTransaction;
@@ -18,6 +11,13 @@ using Quixpenses.App.Services.Invites;
 using Quixpenses.App.Services.MessagesHandling;
 using Quixpenses.App.Services.Transactions;
 using Quixpenses.App.Services.Users;
+using Quixpenses.DatabaseAccess;
+using Quixpenses.DatabaseAccess.Repositories.Currencies;
+using Quixpenses.DatabaseAccess.Repositories.Invites;
+using Quixpenses.DatabaseAccess.Repositories.Transactions;
+using Quixpenses.DatabaseAccess.Repositories.Users;
+using Quixpenses.DatabaseAccess.Repositories.UsersSettings;
+using Quixpenses.DatabaseAccess.UnitOfWork;
 
 namespace Quixpenses.App.Extensions;
 

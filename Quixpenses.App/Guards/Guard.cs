@@ -1,6 +1,7 @@
 ﻿using Quixpenses.App.Exceptions;
 using Quixpenses.App.Handlers;
 using Quixpenses.App.Models;
+using Quixpenses.DatabaseAccess.DatabaseModels;
 
 namespace Quixpenses.App.Guards;
 

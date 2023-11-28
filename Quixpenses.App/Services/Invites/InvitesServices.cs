@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.Options;
 using Quixpenses.App.ConfigurationOptions;
-using Quixpenses.App.DatabaseAccess.UnitOfWork;
 using Quixpenses.App.Models;
+using Quixpenses.DatabaseAccess.DatabaseModels;
+using Quixpenses.DatabaseAccess.UnitOfWork;
 
 namespace Quixpenses.App.Services.Invites;
 
