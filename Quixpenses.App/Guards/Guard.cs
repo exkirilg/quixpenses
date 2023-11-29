@@ -9,18 +9,12 @@ public static class Guard
 {
     public static void AgainstUnknownUpdateType(IncomingMessage? message)
     {
-        if (message is null)
-        {
-            throw new UnknownUpdateTypeException();
-        }
+        UnknownUpdateTypeException.ThrowIfNull(message);
     }
 
     public static void AgainstUnauthorizedUser(User? user)
     {
-        if (user is null || !user.IsAuthorized)
-        {
-            throw new UnauthorizedException();
-        }
+        UnauthorizedException.ThrowIfUnauthorized(user);
     }
 
     public static void AgainstNotImplementedHandler(IHandler? handler)
@@ -33,9 +27,6 @@ public static class Guard
 
     public static void AgainstCurrencyNotFound(Currency? currency)
     {
-        if (currency is null)
-        {
-            throw new UnknownCurrencyCode();
-        }
+        UnknownCurrencyCode.ThrowIfNull(currency);
     }
 }
