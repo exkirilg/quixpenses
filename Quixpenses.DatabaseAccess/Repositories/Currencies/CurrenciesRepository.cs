@@ -1,15 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Quixpenses.DatabaseAccess.DatabaseModels;
+﻿using Quixpenses.Common.Models;
 
 namespace Quixpenses.DatabaseAccess.Repositories.Currencies;
 
-public class CurrenciesRepository(
-        EfContext context)
-    : GenericRepository<Currency>(context), ICurrenciesRepository
+public class CurrenciesRepository(EfContext context) : GenericRepository<Currency>(context), ICurrenciesRepository
 {
-    public async Task<Currency?> TryGetByIdReadonlyAsync(string id)
+    public async Task<Currency?> TryGetByIdAsync(string id)
     {
-        var result = await Context.Currencies.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
-        return result;
+        return await Context.Currencies.FindAsync(id);
     }
 }

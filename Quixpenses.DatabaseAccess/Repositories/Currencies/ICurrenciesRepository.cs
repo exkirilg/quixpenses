@@ -1,8 +1,8 @@
-﻿using Quixpenses.DatabaseAccess.DatabaseModels;
+﻿using Quixpenses.Common.Models;
 
 namespace Quixpenses.DatabaseAccess.Repositories.Currencies;
 
 public interface ICurrenciesRepository : IGenericRepository<Currency>
 {
-    Task<Currency?> TryGetByIdReadonlyAsync(string id);
+    Task<Currency?> TryGetByIdAsync(string id);
 }

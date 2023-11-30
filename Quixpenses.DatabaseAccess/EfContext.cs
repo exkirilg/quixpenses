@@ -1,28 +1,28 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Quixpenses.Common.Models;
 using Quixpenses.DatabaseAccess.DatabaseConfiguration;
-using Quixpenses.DatabaseAccess.DatabaseModels;
 using Quixpenses.DatabaseAccess.SeedingData;
 
 namespace Quixpenses.DatabaseAccess;
 
-public class EfContext(
-        DbContextOptions<EfContext> options)
-    : DbContext(options)
+public class EfContext(DbContextOptions<EfContext> options) : DbContext(options)
 {
-    public DbSet<Invite> Invites { get; set; } = default!;
+    public DbSet<Invite> Invites { get; init; } = default!;
 
-    public DbSet<User> Users { get; set; } = default!;
+    public DbSet<User> Users { get; init; } = default!;
 
-    public DbSet<UserSettings> UsersSettings { get; set; } = default!;
+    public DbSet<UserSettings> UsersSettings { get; init; } = default!;
 
-    public DbSet<Currency> Currencies { get; set; } = default!;
+    public DbSet<Currency> Currencies { get; init; } = default!;
 
-    public DbSet<Transaction> Transactions { get; set; } = default!;
+    public DbSet<Transaction> Transactions { get; init; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.SeedCurrencies();
+        modelBuilder.ConfigureCurrencies();
+        modelBuilder.ConfigureUsers();
         modelBuilder.ConfigureTransactions();
-        modelBuilder.ConfigureUserSettings();
+
+        modelBuilder.SeedCurrencies();
     }
 }

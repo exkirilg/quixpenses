@@ -1,4 +1,4 @@
-﻿using Quixpenses.DatabaseAccess.DatabaseModels;
+﻿using Quixpenses.Common.Models;
 
 namespace Quixpenses.DatabaseAccess.Repositories.Invites;
 

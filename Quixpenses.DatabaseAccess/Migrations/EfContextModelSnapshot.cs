@@ -17,12 +17,15 @@ namespace Quixpenses.DatabaseAccess.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.14")
+                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Quixpenses.DatabaseAccess.DatabaseModels.Currency", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.Currency", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -32,10 +35,9 @@ namespace Quixpenses.DatabaseAccess.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("fraction_digits");
 
-                    b.HasKey("Id")
-                        .HasName("pk_currencies");
+                    b.HasKey("Id");
 
-                    b.ToTable("currencies", (string)null);
+                    b.ToTable("currencies");
 
                     b.HasData(
                         new
@@ -50,7 +52,7 @@ namespace Quixpenses.DatabaseAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Quixpenses.DatabaseAccess.DatabaseModels.Invite", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.Invite", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -69,13 +71,12 @@ namespace Quixpenses.DatabaseAccess.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("used");
 
-                    b.HasKey("Id")
-                        .HasName("pk_invites");
+                    b.HasKey("Id");
 
-                    b.ToTable("invites", (string)null);
+                    b.ToTable("invites");
                 });
 
-            modelBuilder.Entity("Quixpenses.DatabaseAccess.DatabaseModels.Transaction", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.Transaction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -88,32 +89,27 @@ namespace Quixpenses.DatabaseAccess.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<string>("CurrencyId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("currency_id");
-
                     b.Property<int>("Sum")
                         .HasColumnType("integer")
                         .HasColumnName("sum");
 
-                    b.Property<long>("UserId")
-                        .HasColumnType("bigint")
-                        .HasColumnName("user_id");
+                    b.Property<string>("currency_id")
+                        .IsRequired()
+                        .HasColumnType("text");
 
-                    b.HasKey("Id")
-                        .HasName("pk_transactions");
+                    b.Property<long>("user_id")
+                        .HasColumnType("bigint");
 
-                    b.HasIndex("CurrencyId")
-                        .HasDatabaseName("ix_transactions_currency_id");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UserId")
-                        .HasDatabaseName("ix_transactions_user_id");
+                    b.HasIndex("currency_id");
 
-                    b.ToTable("transactions", (string)null);
+                    b.HasIndex("user_id");
+
+                    b.ToTable("transactions");
                 });
 
-            modelBuilder.Entity("Quixpenses.DatabaseAccess.DatabaseModels.User", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -122,89 +118,75 @@ namespace Quixpenses.DatabaseAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_admin");
+
                     b.Property<bool>("IsAuthorized")
                         .HasColumnType("boolean")
                         .HasColumnName("is_authorized");
 
-                    b.Property<Guid>("UserSettingsId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_settings_id");
+                    b.HasKey("Id");
 
-                    b.HasKey("Id")
-                        .HasName("pk_users");
-
-                    b.HasIndex("UserSettingsId")
-                        .HasDatabaseName("ix_users_user_settings_id");
-
-                    b.ToTable("users", (string)null);
+                    b.ToTable("users");
                 });
 
-            modelBuilder.Entity("Quixpenses.DatabaseAccess.DatabaseModels.UserSettings", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.UserSettings", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    b.Property<string>("CurrencyId")
+                    b.Property<string>("currency_id")
                         .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("USD")
-                        .HasColumnName("currency_id");
+                        .HasColumnType("text");
 
-                    b.HasKey("Id")
-                        .HasName("pk_users_settings");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CurrencyId")
-                        .HasDatabaseName("ix_users_settings_currency_id");
+                    b.HasIndex("currency_id");
 
-                    b.ToTable("users_settings", (string)null);
+                    b.ToTable("users_settings");
                 });
 
-            modelBuilder.Entity("Quixpenses.DatabaseAccess.DatabaseModels.Transaction", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.Transaction", b =>
                 {
-                    b.HasOne("Quixpenses.DatabaseAccess.DatabaseModels.Currency", "Currency")
+                    b.HasOne("Quixpenses.Common.Models.Currency", "Currency")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_transactions_currencies_currency_id");
+                        .HasForeignKey("currency_id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
-                    b.HasOne("Quixpenses.DatabaseAccess.DatabaseModels.User", "User")
+                    b.HasOne("Quixpenses.Common.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_transactions_users_user_id");
+                        .IsRequired();
 
                     b.Navigation("Currency");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Quixpenses.DatabaseAccess.DatabaseModels.User", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.UserSettings", b =>
                 {
-                    b.HasOne("Quixpenses.DatabaseAccess.DatabaseModels.UserSettings", "UserSettings")
-                        .WithMany()
-                        .HasForeignKey("UserSettingsId")
+                    b.HasOne("Quixpenses.Common.Models.User", null)
+                        .WithOne("Settings")
+                        .HasForeignKey("Quixpenses.Common.Models.UserSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_users_users_settings_user_settings_id");
+                        .IsRequired();
 
-                    b.Navigation("UserSettings");
-                });
-
-            modelBuilder.Entity("Quixpenses.DatabaseAccess.DatabaseModels.UserSettings", b =>
-                {
-                    b.HasOne("Quixpenses.DatabaseAccess.DatabaseModels.Currency", "Currency")
+                    b.HasOne("Quixpenses.Common.Models.Currency", "Currency")
                         .WithMany()
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_users_settings_currencies_currency_id");
+                        .HasForeignKey("currency_id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Currency");
+                });
+
+            modelBuilder.Entity("Quixpenses.Common.Models.User", b =>
+                {
+                    b.Navigation("Settings");
                 });
 #pragma warning restore 612, 618
         }

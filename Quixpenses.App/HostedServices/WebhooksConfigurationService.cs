@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
+using Quixpenses.Common.ConfigurationOptions;
 using Telegram.Bot;
 using Telegram.Bot.Types.Enums;
-using Quixpenses.App.ConfigurationOptions;
 
 namespace Quixpenses.App.HostedServices;
 

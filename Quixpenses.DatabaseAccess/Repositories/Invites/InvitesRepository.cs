@@ -1,15 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Quixpenses.DatabaseAccess.DatabaseModels;
+﻿using Quixpenses.Common.Models;
 
 namespace Quixpenses.DatabaseAccess.Repositories.Invites;
 
-public class InvitesRepository(
-        EfContext context)
-    : GenericRepository<Invite>(context), IInvitesRepository
+public class InvitesRepository(EfContext context) : GenericRepository<Invite>(context), IInvitesRepository
 {
     public async Task<Invite?> TryGetByIdAsync(Guid id)
     {
-        var result = await Context.Invites.FirstOrDefaultAsync(x => x.Id == id);
-        return result;
+        return await Context.Invites.FindAsync(id);
     }
 }

@@ -1,5 +1,4 @@
-﻿using Quixpenses.DatabaseAccess.DatabaseModels;
-using Quixpenses.DatabaseAccess.DatabaseModels.Interfaces;
+﻿using Quixpenses.Common.Models.Interfaces;
 
 namespace Quixpenses.DatabaseAccess.Repositories;
 
