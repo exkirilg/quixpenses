@@ -1,10 +1,10 @@
-﻿using Quixpenses.Common.Models;
-using Quixpenses.DatabaseAccess;
+﻿using Quixpenses.Common.Models.DbModels;
+using Quixpenses.DatabaseAccess.Interfaces;
 using Quixpenses.Services.Currencies.Interfaces;
 
 namespace Quixpenses.Services.Currencies;
 
-public class GetCurrencyService(UnitOfWork unitOfWork) : IGetCurrencyService
+public class GetCurrencyService(IUnitOfWork unitOfWork) : IGetCurrencyService
 {
     public Task<Currency?> TryGetCurrencyAsync(string currencyCode)
     {

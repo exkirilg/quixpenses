@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Quixpenses.Common.Models;
+using Quixpenses.Common.Models.DbModels;
 using Quixpenses.DatabaseAccess.DatabaseConfiguration;
 using Quixpenses.DatabaseAccess.SeedingData;
 
@@ -15,17 +15,18 @@ public class EfContext(DbContextOptions<EfContext> options) : DbContext(options)
 
     public DbSet<Currency> Currencies { get; init; } = default!;
 
-    public DbSet<Transaction> Transactions { get; init; } = default!;
+    public DbSet<Expense> Transactions { get; init; } = default!;
 
     public DbSet<Category> Categories { get; init; } = default!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ConfigureCurrencies();
-        modelBuilder.ConfigureUsers();
-        modelBuilder.ConfigureTransactions();
-        modelBuilder.ConfigureCategories();
-
-        modelBuilder.SeedCurrencies();
+        modelBuilder
+            .ConfigureCurrencies()
+            .ConfigureUsers()
+            .ConfigureUsersSessions()
+            .ConfigureExpenses()
+            .ConfigureCategories()
+            .SeedCurrencies();
     }
 }

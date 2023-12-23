@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Quixpenses.Common.Models;
+using Quixpenses.Common.Models.DbModels;
 
 namespace Quixpenses.DatabaseAccess.Repositories.Categories;
 

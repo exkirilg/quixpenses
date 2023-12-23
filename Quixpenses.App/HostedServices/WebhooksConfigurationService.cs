@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
-using Quixpenses.Common.ConfigurationOptions;
+using Quixpenses.App.ConfigurationOptions;
+using Quixpenses.App.Extensions;
 using Telegram.Bot;
-using Telegram.Bot.Types.Enums;
 
 namespace Quixpenses.App.HostedServices;
 
@@ -18,14 +18,8 @@ public class WebhooksConfigurationService(
         using var scope = serviceProvider.CreateScope();
         var telegramBotClient = scope.ServiceProvider.GetRequiredService<ITelegramBotClient>();
 
-        var webhookAddress = $"{telegramBotOptions.HostAddress}{telegramBotOptions.Route}";
-        logger.LogInformation("Setting webhook: {WebhookAddress}", webhookAddress);
-
-        await telegramBotClient.SetWebhookAsync(
-            url: webhookAddress,
-            allowedUpdates: Array.Empty<UpdateType>(),
-            secretToken: telegramBotOptions.SecretToken,
-            cancellationToken: cancellationToken);
+        await telegramBotClient.SetupWebhookAsync(options.Value, cancellationToken);
+        await telegramBotClient.SetupCommandsAsync(cancellationToken);
     }
 
     public async Task StopAsync(CancellationToken cancellationToken)

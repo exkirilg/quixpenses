@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using Quixpenses.Common.ConfigurationOptions;
+using Quixpenses.App.ConfigurationOptions;
 using Telegram.Bot;
 
 namespace Quixpenses.App.DIConfiguration;

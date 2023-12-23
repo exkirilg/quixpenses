@@ -3,10 +3,10 @@ using Quixpenses.Services.Categories;
 using Quixpenses.Services.Categories.Interfaces;
 using Quixpenses.Services.Currencies;
 using Quixpenses.Services.Currencies.Interfaces;
+using Quixpenses.Services.Expenses;
+using Quixpenses.Services.Expenses.Interfaces;
 using Quixpenses.Services.Invites;
 using Quixpenses.Services.Invites.Interfaces;
-using Quixpenses.Services.Transactions;
-using Quixpenses.Services.Transactions.Interfaces;
 using Quixpenses.Services.Users;
 using Quixpenses.Services.Users.Interfaces;
 
@@ -21,7 +21,7 @@ public static class ServicesConfigurationExtensions
             .ConfigureInvitesServices()
             .ConfigureCurrenciesServices()
             .ConfigureCategoriesServices()
-            .ConfigureTransactionsServices();
+            .ConfigureExpensesServices();
         return services;
     }
 
@@ -30,6 +30,7 @@ public static class ServicesConfigurationExtensions
         services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
         services.AddScoped<IUserCreationService, UserCreationService>();
         services.AddScoped<IUserSettingsService, UserSettingsService>();
+        services.AddScoped<IUserSessionService, UserSessionService>();
         return services;
     }
 
@@ -46,9 +47,9 @@ public static class ServicesConfigurationExtensions
         return services;
     }
 
-    private static IServiceCollection ConfigureTransactionsServices(this IServiceCollection services)
+    private static IServiceCollection ConfigureExpensesServices(this IServiceCollection services)
     {
-        services.AddScoped<ICreateTransactionService, CreateTransactionService>();
+        services.AddScoped<ICreateExpenseService, CreateExpenseService>();
         return services;
     }
 

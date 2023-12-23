@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Quixpenses.Common.Exceptions;
-using Quixpenses.Common.Models;
-using Quixpenses.DatabaseAccess;
+﻿using Quixpenses.Common.Models.DbModels;
+using Quixpenses.DatabaseAccess.Interfaces;
 using Quixpenses.Services.Invites.Interfaces;
 
 namespace Quixpenses.Services.Invites;
 
-public class CreateInviteService(UnitOfWork unitOfWork)
+public class CreateInviteService(IUnitOfWork unitOfWork)
     : ICreateInviteService
 {
     public async Task<Invite> CreateInviteAsync(ushort numberOfUses, DateTime expiresAt)
@@ -17,14 +15,7 @@ public class CreateInviteService(UnitOfWork unitOfWork)
             ExpiresAt = expiresAt,
         };
 
-        var validationResults = result.Validate(new ValidationContext(result)).ToArray();
-        if (validationResults.Length != 0)
-        {
-            throw new UnableToCreateInviteException(string.Join(", ", validationResults.Select(x => x.ErrorMessage)));
-        }
-
         await unitOfWork.InvitesRepository.AddAsync(result);
-        await unitOfWork.SaveChangesAsync();
 
         return result;
     }

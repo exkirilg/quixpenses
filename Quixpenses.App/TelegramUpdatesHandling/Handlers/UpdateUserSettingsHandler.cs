@@ -1,10 +1,11 @@
 ﻿using Quixpenses.App.Extensions;
 using Quixpenses.App.TelegramUpdatesHandling.Handlers.Interfaces;
+using Quixpenses.Common.Models;
 using Quixpenses.Services.Currencies.Interfaces;
 using Quixpenses.Services.Users.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using User = Quixpenses.Common.Models.User;
+using User = Quixpenses.Common.Models.DbModels.User;
 
 namespace Quixpenses.App.TelegramUpdatesHandling.Handlers;
 
@@ -13,25 +14,26 @@ public class UpdateUserSettingsHandler(
     IUserSettingsService userSettingsService,
     IGetCurrencyService getCurrencyService,
     ITelegramBotClient telegramBotClient)
-    : IUpdateUserSettingsHandler
 {
-    public async Task HandleAsync(Update update)
+    public async Task HandleAsync(User user, UpdateData update)
     {
-        var userId = update.GetChatIdSafe();
-        var user = await userAuthenticationService.AuthenticateAsync(userId);
+        throw new NotImplementedException();
 
-        if (user.IsAuthorized is false) return;
-
-        var (settingName, settingValue) = update.ParseSettingsUpdateValues();
-
-        switch (settingName)
-        {
-            case "currency":
-                await UpdateCurrencySetting(user, settingValue.Trim().ToUpper(), update);
-                break;
-            default:
-                throw new NotImplementedException();
-        }
+        // var userId = update.GetChatId();
+        // var user = await userAuthenticationService.AuthenticateAsync(userId);
+        //
+        // if (user.IsAuthorized is false) return;
+        //
+        // var (settingName, settingValue) = update.ParseSettingsUpdateValues();
+        //
+        // switch (settingName)
+        // {
+        //     case "currency":
+        //         await UpdateCurrencySetting(user, settingValue.Trim().ToUpper(), update);
+        //         break;
+        //     default:
+        //         throw new NotImplementedException();
+        // }
     }
 
     private async Task UpdateCurrencySetting(User user, string currencyCode, Update update)

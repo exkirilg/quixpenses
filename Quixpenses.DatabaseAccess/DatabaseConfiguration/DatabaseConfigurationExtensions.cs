@@ -1,18 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Quixpenses.Common.Models;
+using Quixpenses.Common.Models.DbModels;
 
 namespace Quixpenses.DatabaseAccess.DatabaseConfiguration;
 
 public static class DatabaseConfigurationExtensions
 {
-    public static void ConfigureTransactions(this ModelBuilder builder)
+    public static ModelBuilder ConfigureExpenses(this ModelBuilder builder)
     {
-        builder.Entity<Transaction>()
+        builder.Entity<Expense>()
             .Property(x => x.CreatedAt)
             .HasDefaultValueSql("now()");
+
+        return builder;
     }
 
-    public static void ConfigureCurrencies(this ModelBuilder builder)
+    public static ModelBuilder ConfigureCurrencies(this ModelBuilder builder)
     {
         builder.Entity<Currency>()
             .HasMany<UserSettings>()
@@ -22,14 +24,16 @@ public static class DatabaseConfigurationExtensions
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Entity<Currency>()
-            .HasMany<Transaction>()
+            .HasMany<Expense>()
             .WithOne(x => x.Currency)
             .HasForeignKey("currency_id")
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
+
+        return builder;
     }
 
-    public static void ConfigureUsers(this ModelBuilder builder)
+    public static ModelBuilder ConfigureUsers(this ModelBuilder builder)
     {
         builder.Entity<User>()
             .HasOne(x => x.Settings)
@@ -38,7 +42,12 @@ public static class DatabaseConfigurationExtensions
             .IsRequired();
 
         builder.Entity<User>()
-            .HasMany<Transaction>()
+            .HasOne(x => x.CurrentSession)
+            .WithOne()
+            .HasForeignKey<Session>(x => x.Id);
+
+        builder.Entity<User>()
+            .HasMany<Expense>()
             .WithOne(x => x.User)
             .HasForeignKey("user_id")
             .IsRequired();
@@ -48,14 +57,33 @@ public static class DatabaseConfigurationExtensions
             .WithOne(x => x.User)
             .HasForeignKey("user_id")
             .IsRequired();
+
+        return builder;
     }
 
-    public static void ConfigureCategories(this ModelBuilder builder)
+    public static ModelBuilder ConfigureUsersSessions(this ModelBuilder builder)
+    {
+        builder.Entity<Session>()
+            .Property("commandType")
+            .HasColumnName("command_type")
+            .HasColumnType("text");
+
+        builder.Entity<Session>()
+            .Property("commandJson")
+            .HasColumnName("command")
+            .HasColumnType("jsonb");
+
+        return builder;
+    }
+
+    public static ModelBuilder ConfigureCategories(this ModelBuilder builder)
     {
         builder.Entity<Category>()
-            .HasOne<Transaction>()
+            .HasOne<Expense>()
             .WithOne(x => x.Category)
-            .HasForeignKey<Transaction>("category_id")
+            .HasForeignKey<Expense>("category_id")
             .OnDelete(DeleteBehavior.Restrict);
+
+        return builder;
     }
 }

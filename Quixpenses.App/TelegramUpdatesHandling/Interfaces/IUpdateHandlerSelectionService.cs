@@ -1,9 +1,10 @@
 ﻿using Quixpenses.App.TelegramUpdatesHandling.Handlers.Interfaces;
-using Telegram.Bot.Types;
+using Quixpenses.Common.Models;
+using Quixpenses.Common.Models.DbModels;
 
 namespace Quixpenses.App.TelegramUpdatesHandling.Interfaces;
 
 public interface IUpdateHandlerSelectionService
 {
-    IUpdateHandler? SelectHandler(Update update);
+    bool TrySelectHandler(User user, UpdateData update, out IUpdateHandler? result);
 }

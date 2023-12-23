@@ -25,7 +25,7 @@ namespace Quixpenses.DatabaseAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Quixpenses.Common.Models.Category", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,7 +47,7 @@ namespace Quixpenses.DatabaseAccess.Migrations
                     b.ToTable("categories");
                 });
 
-            modelBuilder.Entity("Quixpenses.Common.Models.Currency", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.Currency", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -74,31 +74,7 @@ namespace Quixpenses.DatabaseAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Quixpenses.Common.Models.Invite", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<int>("Available")
-                        .HasColumnType("integer")
-                        .HasColumnName("available");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("expires_at");
-
-                    b.Property<int>("Used")
-                        .HasColumnType("integer")
-                        .HasColumnName("used");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("invites");
-                });
-
-            modelBuilder.Entity("Quixpenses.Common.Models.Transaction", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.Expense", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -134,10 +110,57 @@ namespace Quixpenses.DatabaseAccess.Migrations
 
                     b.HasIndex("user_id");
 
-                    b.ToTable("transactions");
+                    b.ToTable("expenses");
                 });
 
-            modelBuilder.Entity("Quixpenses.Common.Models.User", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.Invite", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<int>("Available")
+                        .HasColumnType("integer")
+                        .HasColumnName("available");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<int>("Used")
+                        .HasColumnType("integer")
+                        .HasColumnName("used");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("invites");
+                });
+
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.Session", b =>
+                {
+                    b.Property<long>("Id")
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    b.Property<string>("CommandJson")
+                        .HasColumnType("jsonb")
+                        .HasColumnName("command");
+
+                    b.Property<string>("CommandType")
+                        .HasColumnType("text")
+                        .HasColumnName("command_type");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("users_sessions");
+                });
+
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -159,7 +182,7 @@ namespace Quixpenses.DatabaseAccess.Migrations
                     b.ToTable("users");
                 });
 
-            modelBuilder.Entity("Quixpenses.Common.Models.UserSettings", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.UserSettings", b =>
                 {
                     b.Property<long>("Id")
                         .HasColumnType("bigint")
@@ -176,9 +199,9 @@ namespace Quixpenses.DatabaseAccess.Migrations
                     b.ToTable("users_settings");
                 });
 
-            modelBuilder.Entity("Quixpenses.Common.Models.Category", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.Category", b =>
                 {
-                    b.HasOne("Quixpenses.Common.Models.User", "User")
+                    b.HasOne("Quixpenses.Common.Models.DbModels.User", "User")
                         .WithMany()
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -187,20 +210,20 @@ namespace Quixpenses.DatabaseAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Quixpenses.Common.Models.Transaction", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.Expense", b =>
                 {
-                    b.HasOne("Quixpenses.Common.Models.Category", "Category")
+                    b.HasOne("Quixpenses.Common.Models.DbModels.Category", "Category")
                         .WithOne()
-                        .HasForeignKey("Quixpenses.Common.Models.Transaction", "category_id")
+                        .HasForeignKey("Quixpenses.Common.Models.DbModels.Expense", "category_id")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Quixpenses.Common.Models.Currency", "Currency")
+                    b.HasOne("Quixpenses.Common.Models.DbModels.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("currency_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Quixpenses.Common.Models.User", "User")
+                    b.HasOne("Quixpenses.Common.Models.DbModels.User", "User")
                         .WithMany()
                         .HasForeignKey("user_id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -213,15 +236,24 @@ namespace Quixpenses.DatabaseAccess.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Quixpenses.Common.Models.UserSettings", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.Session", b =>
                 {
-                    b.HasOne("Quixpenses.Common.Models.User", null)
+                    b.HasOne("Quixpenses.Common.Models.DbModels.User", null)
+                        .WithOne("CurrentSession")
+                        .HasForeignKey("Quixpenses.Common.Models.DbModels.Session", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.UserSettings", b =>
+                {
+                    b.HasOne("Quixpenses.Common.Models.DbModels.User", null)
                         .WithOne("Settings")
-                        .HasForeignKey("Quixpenses.Common.Models.UserSettings", "Id")
+                        .HasForeignKey("Quixpenses.Common.Models.DbModels.UserSettings", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Quixpenses.Common.Models.Currency", "Currency")
+                    b.HasOne("Quixpenses.Common.Models.DbModels.Currency", "Currency")
                         .WithMany()
                         .HasForeignKey("currency_id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -230,8 +262,10 @@ namespace Quixpenses.DatabaseAccess.Migrations
                     b.Navigation("Currency");
                 });
 
-            modelBuilder.Entity("Quixpenses.Common.Models.User", b =>
+            modelBuilder.Entity("Quixpenses.Common.Models.DbModels.User", b =>
                 {
+                    b.Navigation("CurrentSession");
+
                     b.Navigation("Settings");
                 });
 #pragma warning restore 612, 618

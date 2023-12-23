@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
-using Quixpenses.Common.Models;
-using Quixpenses.DatabaseAccess;
+using Quixpenses.Common.Models.DbModels;
+using Quixpenses.DatabaseAccess.Interfaces;
 using Quixpenses.Services.Invites.Interfaces;
 
 namespace Quixpenses.Services.Invites;
 
-public class UseInviteService(ILogger<UseInviteService> logger, UnitOfWork unitOfWork)
+public class UseInviteService(
+    ILogger<UseInviteService> logger,
+    IUnitOfWork unitOfWork)
     : IUseInviteService
 {
     public async Task TryUseInviteAsync(User user, Guid inviteId)

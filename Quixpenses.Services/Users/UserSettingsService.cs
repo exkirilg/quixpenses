@@ -1,10 +1,10 @@
-﻿using Quixpenses.Common.Models;
-using Quixpenses.DatabaseAccess;
+﻿using Quixpenses.Common.Models.DbModels;
+using Quixpenses.DatabaseAccess.Interfaces;
 using Quixpenses.Services.Users.Interfaces;
 
 namespace Quixpenses.Services.Users;
 
-public class UserSettingsService(UnitOfWork unitOfWork) : IUserSettingsService
+public class UserSettingsService(IUnitOfWork unitOfWork) : IUserSettingsService
 {
     public Task SetUserCurrency(User user, Currency value)
     {

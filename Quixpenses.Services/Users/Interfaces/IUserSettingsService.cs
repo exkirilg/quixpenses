@@ -1,4 +1,4 @@
-﻿using Quixpenses.Common.Models;
+﻿using Quixpenses.Common.Models.DbModels;
 
 namespace Quixpenses.Services.Users.Interfaces;
 
