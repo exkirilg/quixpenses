@@ -1,6 +1,7 @@
 ﻿using Quixpenses.App.Extensions;
 using Quixpenses.App.TelegramUpdatesHandling.Handlers.Interfaces;
 using Quixpenses.Common.Models;
+using Quixpenses.Services.Categories.Interfaces;
 using Quixpenses.Services.Currencies.Interfaces;
 using Quixpenses.Services.Transactions.Interfaces;
 using Quixpenses.Services.Users.Interfaces;
@@ -14,6 +15,7 @@ public class CreateTransactionHandler(
     ITelegramBotClient telegramBotClient,
     IUserAuthenticationService userAuthenticationService,
     IGetCurrencyService getCurrencyService,
+    IGetCategoryService getCategoryService,
     ICreateTransactionService createTransactionService)
     : ICreateTransactionHandler
 {
@@ -24,7 +26,7 @@ public class CreateTransactionHandler(
 
         if (user.IsAuthorized is false) return;
 
-        var (currency, sum) = await ParseTransactionSettings(update, user);
+        var (currency, category, sum) = await ParseTransactionSettings(update, user);
 
         if (currency is null)
         {
@@ -34,12 +36,12 @@ public class CreateTransactionHandler(
             return;
         }
 
-        await createTransactionService.CreateTransactionAsync(user, sum, currency);
+        await createTransactionService.CreateTransactionAsync(user, sum, currency, category);
     }
 
-    private async Task<(Currency? currency, float sum)> ParseTransactionSettings(Update update, User user)
+    private async Task<(Currency? currency, Category? category, float sum)> ParseTransactionSettings(Update update, User user)
     {
-        var (sum, currencyCode) = update.ParseTransaction();
+        var (sum, currencyCode, categoryName) = update.ParseTransaction();
 
         Currency? currency;
         if (currencyCode == string.Empty)
@@ -51,6 +53,13 @@ public class CreateTransactionHandler(
             currency = await getCurrencyService.TryGetCurrencyAsync(currencyCode);
         }
 
-        return (currency, sum);
+        Category? category = null;
+        if (categoryName != string.Empty)
+        {
+            category = await getCategoryService.TryGetCategoryAsync(categoryName);
+            category ??= new Category { User = user, Name = categoryName };
+        }
+
+        return (currency, category, sum);
     }
 }

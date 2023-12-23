@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Quixpenses.DatabaseAccess.Repositories.Categories;
 using Quixpenses.DatabaseAccess.Repositories.Currencies;
 using Quixpenses.DatabaseAccess.Repositories.Invites;
 using Quixpenses.DatabaseAccess.Repositories.Transactions;
@@ -19,6 +20,7 @@ public static class DataAccessConfigurationExtensions
         services.AddScoped<IInvitesRepository, InvitesRepository>();
         services.AddScoped<ICurrenciesRepository, CurrenciesRepository>();
         services.AddScoped<ITransactionsRepository, TransactionsRepository>();
+        services.AddScoped<ICategoriesRepository, CategoriesRepository>();
 
         services.AddScoped<UnitOfWork>();
 

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Quixpenses.Services.Categories;
+using Quixpenses.Services.Categories.Interfaces;
 using Quixpenses.Services.Currencies;
 using Quixpenses.Services.Currencies.Interfaces;
 using Quixpenses.Services.Invites;
@@ -18,6 +20,7 @@ public static class ServicesConfigurationExtensions
             .ConfigureUsersServices()
             .ConfigureInvitesServices()
             .ConfigureCurrenciesServices()
+            .ConfigureCategoriesServices()
             .ConfigureTransactionsServices();
         return services;
     }
@@ -46,6 +49,12 @@ public static class ServicesConfigurationExtensions
     private static IServiceCollection ConfigureTransactionsServices(this IServiceCollection services)
     {
         services.AddScoped<ICreateTransactionService, CreateTransactionService>();
+        return services;
+    }
+
+    private static IServiceCollection ConfigureCategoriesServices(this IServiceCollection services)
+    {
+        services.AddScoped<IGetCategoryService, GetCategoryService>();
         return services;
     }
 }

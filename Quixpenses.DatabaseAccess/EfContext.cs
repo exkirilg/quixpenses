@@ -17,11 +17,14 @@ public class EfContext(DbContextOptions<EfContext> options) : DbContext(options)
 
     public DbSet<Transaction> Transactions { get; init; } = default!;
 
+    public DbSet<Category> Categories { get; init; } = default!;
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ConfigureCurrencies();
         modelBuilder.ConfigureUsers();
         modelBuilder.ConfigureTransactions();
+        modelBuilder.ConfigureCategories();
 
         modelBuilder.SeedCurrencies();
     }

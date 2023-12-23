@@ -12,7 +12,7 @@ public static class UpdateExtensions
 
     private const string NewInvitePattern = @"/invite(?:\s*(\d+))?(?:\s*(\d+))?";
     private const string UpdateUserSettingsPattern = @"^/set\s+(\w+)\s+(\w+)$";
-    private const string TransactionPattern = @"^(\d+([.,]\d{1,2})?)?\s*([a-zA-Z]{3})?$";
+    private const string TransactionPattern = @"^(\d+([.,]\d{1,2})?)?\s*([a-zA-Z]{3})?\s*([a-zA-Z]{0-50})?";
 
     public static string GetMessageTextSafe(this Update update)
     {
@@ -102,7 +102,7 @@ public static class UpdateExtensions
         return (name, value);
     }
 
-    public static (float sum, string currencyCode) ParseTransaction(this Update update)
+    public static (float sum, string currencyCode, string categoryName) ParseTransaction(this Update update)
     {
         var match = Regex.Match(update.GetMessageTextSafe(), TransactionPattern);
 
@@ -116,6 +116,8 @@ public static class UpdateExtensions
 
         var currencyCode = match.Groups[3].Value.Trim().ToUpper();
 
-        return (sum, currencyCode);
+        var categoryName = match.Groups[4].Value.Trim();
+
+        return (sum, currencyCode, categoryName);
     }
 }

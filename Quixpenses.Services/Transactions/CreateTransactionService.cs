@@ -6,12 +6,13 @@ namespace Quixpenses.Services.Transactions;
 
 public class CreateTransactionService(UnitOfWork unitOfWork) : ICreateTransactionService
 {
-    public async Task CreateTransactionAsync(User user, float sum, Currency currency)
+    public async Task CreateTransactionAsync(User user, float sum, Currency currency, Category? category)
     {
         var result = new Transaction
         {
             User = user,
             Currency = currency,
+            Category = category,
             Sum = (int)(Math.Round(sum, currency.FractionDigits) * Math.Pow(10, currency.FractionDigits)),
         };
 

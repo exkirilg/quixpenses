@@ -1,4 +1,5 @@
-﻿using Quixpenses.DatabaseAccess.Repositories.Currencies;
+﻿using Quixpenses.DatabaseAccess.Repositories.Categories;
+using Quixpenses.DatabaseAccess.Repositories.Currencies;
 using Quixpenses.DatabaseAccess.Repositories.Invites;
 using Quixpenses.DatabaseAccess.Repositories.Transactions;
 using Quixpenses.DatabaseAccess.Repositories.Users;
@@ -10,15 +11,18 @@ public class UnitOfWork(
     IInvitesRepository invitesRepository,
     IUsersRepository usersRepository,
     ICurrenciesRepository currenciesRepository,
-    ITransactionsRepository transactionsRepository)
+    ITransactionsRepository transactionsRepository,
+    ICategoriesRepository categoriesRepository)
 {
-    public IInvitesRepository InvitesRepository { get; } = invitesRepository;
+    public IInvitesRepository InvitesRepository => invitesRepository;
 
-    public IUsersRepository UsersRepository { get; } = usersRepository;
+    public IUsersRepository UsersRepository => usersRepository;
 
-    public ICurrenciesRepository CurrenciesRepository { get; } = currenciesRepository;
+    public ICurrenciesRepository CurrenciesRepository => currenciesRepository;
 
-    public ITransactionsRepository TransactionsRepository { get; } = transactionsRepository;
+    public ITransactionsRepository TransactionsRepository => transactionsRepository;
+
+    public ICategoriesRepository CategoriesRepository => categoriesRepository;
 
     public async Task SaveChangesAsync()
     {

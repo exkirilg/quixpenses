@@ -42,5 +42,20 @@ public static class DatabaseConfigurationExtensions
             .WithOne(x => x.User)
             .HasForeignKey("user_id")
             .IsRequired();
+
+        builder.Entity<User>()
+            .HasMany<Category>()
+            .WithOne(x => x.User)
+            .HasForeignKey("user_id")
+            .IsRequired();
+    }
+
+    public static void ConfigureCategories(this ModelBuilder builder)
+    {
+        builder.Entity<Category>()
+            .HasOne<Transaction>()
+            .WithOne(x => x.Category)
+            .HasForeignKey<Transaction>("category_id")
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }
